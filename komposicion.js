@@ -7,12 +7,13 @@ function setup() {
 
 function draw() {
     cmp = new Composicion();
-    background(cmp.colorDeFondo());
+    background(cmp.colorDeFondo);
     noStroke();
     //cmp.cuadricula();
     cmp.trianguloMarron();
-    //cmp.triangulitoRojo();
-    //cmp.circulosConcentricos();
+    cmp.trianguloRojo();
+    cmp.circulosConcentricos();
+    cmp.circuloColorDeFondo();
 }
 
 class Composicion {
@@ -20,13 +21,15 @@ class Composicion {
 
     constructor() {
         this.cCanvas = [width / 2, height / 2];
+        this.colorDeFondo = this.seleccionaColorDeFondo();
     }
 
-    colorDeFondo() {
+    seleccionaColorDeFondo() {
         return [
             floor(random(25, 35)),
             floor(random(25, 35)),
             floor(random(70, 85)),
+            1,
         ];
     }
 
@@ -37,37 +40,31 @@ class Composicion {
     }
 
     trianguloMarron() {
+        let punto0 = [
+            random(width * 0.6, width * 0.75),
+            random(height * 0.15, height * 0.25),
+        ];
         let punto1 = [
-            this.cCanvas[0] -
-                random(this.cCanvas[0] * 0.5, this.cCanvas[0] * 0.75),
-            this.cCanvas[1] +
-                random(this.cCanvas[1] * 0.5, this.cCanvas[1] * 0.75),
+            random(width * 0.88, width * 0.9),
+            random(height * 0.45, height * 0.55),
         ];
         let punto2 = [
-            this.cCanvas[0] +
-                random(this.cCanvas[0] * 0.1, this.cCanvas[0] * 0.35),
-            this.cCanvas[1] -
-                random(this.cCanvas[1] * 0.5, this.cCanvas[1] * 0.75),
+            random(width * 0.15, width * 0.25),
+            random(height * 0.8, height * 0.9),
         ];
-        let punto3 = [
-            this.cCanvas[0] +
-                random(this.cCanvas[0] * 0.25, this.cCanvas[0] * 0.5),
-            this.cCanvas[1] -
-                random(this.cCanvas[1] * -0.2, this.cCanvas[1] * 0.2),
-        ];
-        this.verticesTrianguloGrande = [punto1, punto2, punto3];
+        this.verticesTrianguloGrande = [punto0, punto1, punto2];
 
         fill(this.coloresTrianguloMarron());
         stroke(this.coloresTrianguloMarron());
         strokeWeight(5);
 
         triangle(
+            punto0[0],
+            punto0[1],
             punto1[0],
             punto1[1],
             punto2[0],
-            punto2[1],
-            punto3[0],
-            punto3[1]
+            punto2[1]
         );
     }
 
@@ -80,39 +77,36 @@ class Composicion {
         ];
     }
 
-    triangulitoRojo() {
-        let punto = this.verticesTrianguloGrande[1];
+    trianguloRojo() {
+        let vertice = this.verticesTrianguloGrande[0];
+        let punto0 = [
+            vertice[0],
+            vertice[1] + random(height * 0.045, height * 0.09),
+        ];
         let punto1 = [
-            punto[0],
-            punto[1] + random(this.cCanvas[0] * 0.05, this.cCanvas[0] * 0.1),
+            vertice[0] - random(width * 0.05, width * 0.1),
+            vertice[1] - random(height * 0.025, height * 0.05),
         ];
         let punto2 = [
-            punto[0] - random(this.cCanvas[1] * 0.1),
-            punto[1] - random(this.cCanvas[0] * 0.2),
-        ];
-        let punto3 = [
-            punto[0] + random(this.cCanvas[1] * 0.1),
-            punto[1] - random(this.cCanvas[0] * 0.2),
+            vertice[0] + random(width * 0.05, width * 0.1),
+            vertice[1] - random(height * 0.025, height * 0.1),
         ];
 
-        fill(this.coloresTriangulitoRojo());
-        stroke(this.coloresTriangulitoRojo());
+        fill(this.coloresTrianguloRojo());
+        stroke(this.coloresTrianguloRojo());
         strokeWeight(5);
 
-        //console.log(punto1);
-        //console.log(punto2);
-        //console.log(punto3);
         triangle(
+            punto0[0],
+            punto0[1],
             punto1[0],
             punto1[1],
             punto2[0],
-            punto2[1],
-            punto3[0],
-            punto3[1]
+            punto2[1]
         );
     }
 
-    coloresTriangulitoRojo() {
+    coloresTrianguloRojo() {
         return [
             floor(random(350, 360)),
             floor(random(70, 80)),
@@ -123,70 +117,82 @@ class Composicion {
 
     circulosConcentricos() {
         let centro = [
-            this.cCanvas[0] -
-                random(this.cCanvas[0] * 0.75, this.cCanvas[0] * 0.5),
-            this.cCanvas[1] -
-                random(this.cCanvas[1] * 0.75, this.cCanvas[1] * 0.65),
+            random(width * 0.25, width * 0.35),
+            random(height * 0.15, height * 0.25),
         ];
-        //let cantCirculos = random([10, 9, 8, 11, 5, 6]);
-        let radio = this.cCanvas[1] * 0.5;
-        //console.log(cantCirculos);
 
-        stroke(0, 0, 0, 1);
-        strokeWeight(random([5, 3, 4]));
-        fill(this.colorDeFondo());
+        let diam = random(width * 0.2, width * 0.3);
+        let vector = createVector();
 
-        circle(centro[0], centro[1], radio);
-
-        radio -= random(radio * 0.2, radio * 0.35);
-        strokeWeight(random([5, 6, 1, 0.5]));
-        fill(this.colorDeFondo());
-
-        circle(centro[0], centro[1], radio);
-
-        noStroke();
-        fill(this.coloresVerdes());
-        circle(centro[0], centro[1], radio);
-
-        radio -= random(radio * 0.2, radio * 0.5);
-        stroke(0, 0, 0, 1);
-        strokeWeight(random([5, 4, 3, 2]));
-        fill(this.colorDeFondo());
-        circle(centro[0], centro[1], radio);
-
-        radio -= random(radio * 0.2, radio * 0.5);
-        strokeWeight(random([5, 4, 3, 2]));
-        stroke(this.coloresiAzules());
+        // circulo exterior negro
+        stroke(1, 0, 0, 0.8);
+        fill(this.colorDeFondo);
+        circle(centro[0], centro[1], diam);
+        // segundo circulo
         noFill();
-        circle(centro[0], centro[1], radio);
-
-        radio -= random(radio * 0.2);
-        strokeWeight(random([1, 2]));
-        stroke(this.coloresiAzules());
-        noFill();
-        circle(centro[0], centro[1], radio);
-
-        radio -= random(radio * 0.2);
-        strokeWeight(random([1, 2]));
+        diam *= 0.85;
+        strokeWeight(3);
+        circle(centro[0], centro[1], diam);
+        // tercer circulo verde
+        diam *= 0.9;
         stroke(this.coloresVerdes());
-        fill(this.coloresVerdes());
-        circle(centro[0], centro[1], radio);
+        strokeWeight(10);
+        circle(centro[0], centro[1], diam);
+        strokeWeight(2);
+        for (let i = 0; i <= 4000; i++) {
+            stroke(this.coloresVerdesOscuro());
+            vector.set(centro[0], centro[1]);
+            vector.setMag(random(diam * 0.47, diam * 0.54));
+            vector.setHeading(random(TWO_PI));
+            point(centro[0] + vector.x, centro[1] + vector.y);
+        }
+        // cuarto circulo
+        stroke(1, 0, 0, 0.8);
+        diam *= 0.9;
+        strokeWeight(3);
+        circle(centro[0], centro[1], diam);
+        // quinto circulo azul
+        diam *= 0.6;
+        noFill();
+        stroke(this.coloresAzules());
+        strokeWeight(1);
+        circle(centro[0], centro[1], diam);
+        // sexto circulo azul
+        diam *= 0.85;
+        stroke(this.coloresAzules());
+        strokeWeight(3);
+        circle(centro[0], centro[1], diam);
+        // centro de puntos verdes
+        for (let i = 0; i <= 900; i++) {
+            stroke(this.coloresVerdesOscuro());
+            vector.set(centro[0], centro[1]);
+            vector.setMag(random(diam / 2.5));
+            vector.setHeading(random(TWO_PI));
+            point(centro[0] + vector.x, centro[1] + vector.y);
+        }
     }
 
-    coloresCírculosConcentricos() {
-        return [
-            floor(random([237, 270, 250])),
-            floor(random(25, 80)),
-            floor(random(50, 80)),
-            0.5,
-        ];
+    circuloColorDeFondo() {
+        let centro = this.verticesTrianguloGrande[0];
+        strokeWeight(3);
+        stroke(0, 0, 0, 0.25);
+        fill(this.colorDeFondo);
+        circle(
+            centro[0],
+            centro[1] + random(height * 0.15, height * 0.2),
+            random(60, 70)
+        );
+        //circle(width / 2 ,s1));
     }
 
-    coloresiAzules() {
+    coloresAzules() {
         return [242, floor(random(80, 100)), floor(random(40, 60)), 1];
     }
 
     coloresVerdes() {
-        return [82, floor(random(20, 35)), floor(random(60, 80)), 0.5];
+        return [82, floor(random(20, 35)), floor(random(60, 80)), 0.9];
+    }
+    coloresVerdesOscuro() {
+        return [82, floor(random(50, 75)), floor(random(20, 50)), 0.3];
     }
 }
