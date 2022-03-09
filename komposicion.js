@@ -19,6 +19,8 @@ function draw() {
     cmp.lineaRoja();
     cmp.circulosConcentricos();
     cmp.cuadradosInferiores();
+    cmp.rectangulosIzquierda();
+    cmp.circuloAmarillo();
 }
 
 class Composicion {
@@ -213,6 +215,16 @@ class Composicion {
             random(width * 0.1, width * 0.15)
         );
     }
+     circuloAmarillo() {
+         fill(this.coloresAmarillos(0.5));
+         let puntoCentral = [(this.verticesTrianguloMarron[0][0] + this.verticesTrianguloMarron[1][0]) /2,
+                             (this.verticesTrianguloMarron[0][1] + this.verticesTrianguloMarron[1][1]) /2,];
+         puntoCentral = [(this.verticesTrianguloMarron[2][0] + puntoCentral[0]) / 2,
+                          (this.verticesTrianguloMarron[2][1] + puntoCentral[1]) / 2 ];
+         puntoCentral = [(this.verticesTrianguloMarron[2][0] + puntoCentral[0]) / 2,
+                          (this.verticesTrianguloMarron[2][1] + puntoCentral[1]) / 2 ];
+         circle(puntoCentral[0], puntoCentral[1], 40); 
+     }
 
     cuadradoNaranja() {
         let vertice = [
@@ -282,6 +294,44 @@ class Composicion {
         }
     }
 
+    rectangulosIzquierda() {
+        let centro =[];
+
+        centro[0] = random(width * 0.05, width * 0.15);
+        centro[1] = this.verticesTrianguloMarron[1][1];
+        centro[1] -= random(height * 0.15);
+        let lado = random(width * 0.02, width * 0.025);
+        strokeWeight(3);
+        for (let i =0; i <=3; i++) {
+            centro[0] += lado;
+            square(centro[0], centro[1], lado);
+            for (let j = 0; j <= 600; j++) {
+                stroke(0, 0, 0, 0.075);
+                point(
+                    centro[0] + random(-lado / 2, lado / 2),
+                    centro[1] + random(-lado / 2, lado / 2)
+                );
+            }
+        }
+
+
+        //centro[0] += random(width * 0.0001, width * 0.0005);
+        centro[1] += random(height * 0.01, height * 0.15);
+        lado = random(width * 0.01, width * 0.02);
+        for (let i =0; i <=3; i++) {
+            centro[0] += lado;
+            square(centro[0], centro[1], lado);
+            for (let j = 0; j <= 250; j++) {
+                stroke(0, 0, 0, 0.075);
+                point(
+                    centro[0] + random(-lado / 2, lado / 2),
+                    centro[1] + random(-lado / 2, lado / 2)
+                );
+            }
+        }
+
+    }
+
     coloresRojos(trans) {
         return [
             floor(random(350, 360)),
@@ -302,6 +352,10 @@ class Composicion {
 
     coloresNaranjas(trans) {
         return [35, floor(random(85, 100)), floor(random(85, 100)), trans];
+    }
+
+    coloresAmarillos(trans) {
+        return [50, floor(random(85, 100)), floor(random(85, 100)), trans];
     }
 
     coloresAzules(trans) {
